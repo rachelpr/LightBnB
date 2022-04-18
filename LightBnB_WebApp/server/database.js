@@ -22,8 +22,14 @@ const users = require("./json/users.json");
  * @return {Promise<{}>} A promise to the user.
  */
 const getUserWithEmail = function (email) {
+  const queryString = `
+  SELECT * 
+  FROM users 
+  WHERE email = $1
+  `;
+  const values = [email];
   return pool
-    .query(`SELECT * FROM users WHERE email = $1`, [email])
+    .query(queryString, values)
     .then((res) => {
       if (res.rows) {
         return res.rows[0];
@@ -43,8 +49,14 @@ exports.getUserWithEmail = getUserWithEmail;
  * @return {Promise<{}>} A promise to the user.
  */
 const getUserWithId = function (id) {
+  const queryString = `
+  SELECT * 
+  FROM users 
+  WHERE id = $1
+  `;
+  const values = [id];
   return pool
-    .query(`SELECT * FROM users WHERE id = $1`, [id])
+    .query(queryString, values)
     .then((res) => {
       if (res.rows) {
         return res.rows[0];
@@ -64,11 +76,14 @@ exports.getUserWithId = getUserWithId;
  * @return {Promise<{}>} A promise to the user.
  */
 const addUser = function (user) {
+  const queryString = `
+  INSERT INTO users (name, email, password) 
+  VALUES ($1,$2,$3) 
+  RETURNING *;
+  `;
+  const values = [user.name, user.email, user.password];
   return pool
-    .query(
-      `INSERT INTO users (name, email, password) VALUES ($1,$2,$3) RETURNING *;`,
-      [user.name, user.email, user.password]
-    )
+    .query(queryString, values)
     .then((res) => {
       return res.rows[0];
     })
@@ -86,7 +101,25 @@ exports.addUser = addUser;
  * @return {Promise<[{}]>} A promise to the reservations.
  */
 const getAllReservations = function (guest_id, limit = 10) {
-  return getAllProperties(null, 2);
+  const queryString = `
+  SELECT reservations.*, properties.*, avg(rating) as average_rating
+  FROM reservations
+  JOIN properties ON properties.id = property_id
+  JOIN property_reviews ON reservations.id = reservation_id
+  WHERE reservations.guest_id = $1
+  GROUP BY properties.id, reservations.id
+  ORDER BY reservations.start_date
+  LIMIT $2
+  `;
+  const values = [guest_id, limit];
+  return pool
+    .query(queryString, values)
+    .then((res) => {
+      return res.rows;
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
 };
 exports.getAllReservations = getAllReservations;
 
