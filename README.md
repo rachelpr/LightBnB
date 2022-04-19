@@ -5,7 +5,11 @@
 LightBnB is a light verison of AirBnb. It allows users to rent their homes to people on vacation. This project is built during my studies at Lighthouse Labs.
 
 ## Screenshots
-
+!["Screenshot of Home page"](./screenshots/LightBnB-home.png)
+!["Screenshot of Log In page"](./screenshots/LightBnB-log-in.png)
+!["Screenshot of Sign Up page"](./screenshots/LightBnB-sign-up.png)
+!["Screenshot of Create Listing page"](./screenshots/LightBnb-create-listing.png)
+!["Screenshot of User Reservations page"](./screenshots/LightBnB-My-Reservations.png)
 
 ## Getting Started
 1. Install dependencies using `npm install`
