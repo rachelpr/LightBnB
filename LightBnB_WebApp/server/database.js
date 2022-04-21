@@ -63,7 +63,7 @@ exports.getUserWithId = getUserWithId;
  */
 const addUser = function (user) {
   const queryString = `
-  INSERT INTO users (user_id, name, email, password) 
+  INSERT INTO users (name, email, password) 
   VALUES ($1,$2,$3) 
   RETURNING *;
   `;
